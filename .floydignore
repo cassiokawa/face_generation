@@ -4,6 +4,7 @@
 .git
 .eggs
 eggs
+data
 lib
 lib64
 parts
