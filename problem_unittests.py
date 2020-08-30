@@ -1,7 +1,8 @@
 from copy import deepcopy
 from unittest import mock
-import tensorflow as tf
-
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 def test_safe(func):
     """
@@ -71,7 +72,7 @@ def test_model_inputs(model_inputs):
 @test_safe
 def test_discriminator(discriminator, tf_module):
     with TmpMock(tf_module, 'variable_scope') as mock_variable_scope:
-        image = tf.placeholder(tf.float32, [None, 28, 28, 3])
+        image = tf.compat.v1.placeholder(tf.float32, [None, 28, 28, 3])
 
         output, logits = discriminator(image)
         _assert_tensor_shape(output, [None, 1], 'Discriminator Training(reuse=false) output')
@@ -95,7 +96,7 @@ def test_discriminator(discriminator, tf_module):
 @test_safe
 def test_generator(generator, tf_module):
     with TmpMock(tf_module, 'variable_scope') as mock_variable_scope:
-        z = tf.placeholder(tf.float32, [None, 100])
+        z = tf.compat.v1.placeholder(tf.float32, [None, 100])
         out_channel_dim = 5
 
         output = generator(z, out_channel_dim)
@@ -117,8 +118,8 @@ def test_generator(generator, tf_module):
 @test_safe
 def test_model_loss(model_loss):
     out_channel_dim = 4
-    input_real = tf.placeholder(tf.float32, [None, 28, 28, out_channel_dim])
-    input_z = tf.placeholder(tf.float32, [None, 100])
+    input_real = tf.compat.v1.placeholder(tf.float32, [None, 28, 28, out_channel_dim])
+    input_z = tf.compat.v1.placeholder(tf.float32, [None, 100])
 
     d_loss, g_loss = model_loss(input_real, input_z, out_channel_dim)
 
